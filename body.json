@@ -1,0 +1,10 @@
+﻿{
+  "dumpsterSize": "40",
+  "startDate": "2026-02-01",
+  "durationDays": 5,
+  "name": "Test Customer",
+  "email": "solomondiaz18@gmail.com",
+  "phone": "555-555-5555",
+  "address": "123 Test St, Dallas, TX",
+  "notes": "Testing request flow" 
+}
