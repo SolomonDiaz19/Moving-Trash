@@ -6,47 +6,80 @@ import { site } from "@/lib/site";
 const faqs = [
   {
     q: "What dumpster sizes do you offer?",
-    a: `We offer ${site.featuredSizes.join(", ")} dumpsters. If you’re not sure which size you need, call us and we’ll recommend the best option for your project.`,
+    a: `We offer ${site.featuredSizes.join(", ")} dumpsters. If you tell us what you're tossing (and how much), we'll help you pick the right size.`,
+  },
+{
+    q: "How much does a dumpster rental cost?",
+    a: "Pricing depends on the dumpster size, rental lenght, delivery location (DFW), disposal fees, and weight. The fastest way to get an exact total is to request a quote with your zip code and the size you need.",
+  },
+
+  {
+    q: "What's included in the rental price?",
+    a: "In most cases: Drop-off, pickup, a set rental period, and disposal up to an included weight allowance. Overages (extra weight, extended time, special materials) may add cost.",
   },
   {
-    q: "How long can I keep the dumpster?",
-    a: "Most rentals include a standard rental period. If you need extra time, let us know—we can usually extend the rental based on availability.",
+    q: "How long can I keep the dumpster",
+    a: "Rentals include a standard rental period (varies by jobs). If you need more time, let us know! extensions are usually available.",
   },
   {
-    q: "How is pricing determined?",
-    a: "Pending answer",
+    q: "Do you offer same-day or next-day delivery in DFW?",
+    a: "Sometimes - availability depends on the schedule and your location. The earlier you book, the better.",
   },
   {
-    q: "Do you offer same day or next day delivery?",
-    a: "In most cases yes! depending on availability. Contact us with your preferred delivery date and we'll do our best to accomodate.",
+    q: "What is the delivery window?",
+    a: "We provide an estimated arrival window for delivery and pickup. Traffic/route timing can shift, but we communicate if anything changes.",
   },
   {
-    q: "What can I put in the dumpster?",
-    a: "Pending answer",
+    q: "Do I need to be home when the dumpster is delivered?",
+    a: "Not always. You can leave clear placement instuctions (driveway side, gate code, etc.) and ensure acess.",
   },
   {
-    q: "What items are not allowed?",
-    a: "Pending Answer",
+    q: "Where can you place a dumpster",
+    a: "Usually a driveway or jobsite area with enough clearance. We need a clear, flat spot and room for the truck.",
+  },
+  {
+    q: "Will the dumpster damage my driveway?",
+    a: "We place carefully, but dumpsters are heave. If concerned, use boards/plywood under the wheels and avoid soft surfaces.",
   },
   {
     q: "Do I need a permit?",
-    a: "Pending answer",
+    a: "Private property: usually no.     Street/alley/right-of-way:may require a permit depending on city. We can help confirm.",
   },
   {
-    q: "Is there a weight limit?",
-    a: "Pending answer",
+    q: "What can I put in the dumpster?",
+    a: "Most cleanup/construction debris: wood, drywall, flooring, furniture, junk, roofing debris, general construction waste.",
   },
   {
-    q: "What happens If I overfill the dumpster?",
-    a: "Pending answer",
+    q: "What item are NOT allowed",
+    a: "Common restricted items: paint/chemicals, oils/fuels, batteries, tires, abestos, medical waste, propane tanks, some electronics. Rules may vary - Ask first.",
   },
   {
-    q: "How do I schedule a pickup?",
-    a: "When you are ready, call or message us to schedule a pickup. We'll confirm a pickup window and haul it away.",
+    q: "Is there a weigh limit?",
+    a: "Yes, each size includes a weight allowance. Heavy materials (concrete, dirt, shingles, brick, tile) add up fast. Please tell us what you're dumping.",
   },
   {
-    q: "Do you offer discounts?",
-    a: "Yes! There are Veterans, Seniors, & Teachers discounts. Please mention it when you call or request a quote.",
+    q: "Concrete/dirt/shingles allowed?",
+    a: "Sometimes, but they're heavy and may need special pricing or fill limits. Tell us ahead of time.",
+  },
+  {
+    q: "How full can I load it?",
+    a: "Load level with the top edge (not piled above the rim) so we can tarp and haul safely.",
+  },
+  {
+    q: "How do I schedule pickup?",
+    a: "Call/text or book pickup through the side. Make sure the area is accessible.",
+  },
+  {
+    q: "Can I extend or swap sizes?",
+    a: "Yes, extensions and swaps are usually possible depending on availability.",
+  },
+  {
+    q: "Additional haul (dump and return)?",
+    a: "Yes, common for contractors. We can pick up a full dumpster and drop an empty one (Depending on availablility).",
+  },
+  {
+    q: "How far in advance should I book?",
+    a: "As early as possible, especially for large projects. Please reach out if its urgent.",
   },
   
 ];
