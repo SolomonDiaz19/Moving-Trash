@@ -23,9 +23,9 @@ export default function SizeComparison() {
             <thead className="bg-zinc-50">
               <tr className="[&>th]:px-8 [&>th]:py-5 [&>th]:font-semibold [&>th]:text-zinc-900 [&>th]:text-center text-lg">
                 <th className="w-[28%]"> </th>
-                <th>20 Yard (Insert dimensions) </th>
-                <th>30 Yard (Insert dimensions) </th>
-                <th>40 Yard (Insert dimensions) </th>
+                <th>20 Yard 22'L x 8'W x 4'5"H </th>
+                <th>30 Yard 22'L x 8'W x 6'H </th>
+                <th>40 Yard 22'L x 8'W x 8'H </th>
               </tr>
             </thead>
             <tbody className="[&>tr:not(:last-child)]:border-b [&>tr:not(:last-child)]:border-zinc-200">
