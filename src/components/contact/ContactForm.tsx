@@ -2,7 +2,6 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
 import { site } from "@/lib/site";
 
 const projectTypes = [
@@ -25,19 +24,10 @@ type FormState = {
   size: (typeof sizes)[number] | "";
   dateNeeded: string; // YYYY-MM-DD
   details: string;
-};
 
-{/* Honeypot (bots often fill hidden fields) */}
-<div style={{ position: "absolute", left: "-9999px", top: "auto", width: 1, height: 1, overflow: "hidden" }}>
-  <label htmlFor="companyWebsite">Company Website</label>
-  <input
-    id="companyWebsite"
-    name="companyWebsite"
-    type="text"
-    autoComplete="off"
-    tabIndex={-1}
-  />
-</div>
+  // Honeypot (bots often fill hidden fields)
+  companyWebsite: string;
+};
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -109,6 +99,7 @@ export default function ContactForm() {
     size: "",
     dateNeeded: "",
     details: "",
+    companyWebsite: "", // honeypot
   });
 
   // Popout calendar
@@ -127,7 +118,9 @@ export default function ContactForm() {
   );
 
   // Availability data
-  const [availableStartDates, setAvailableStartDates] = useState<Set<string>>(new Set());
+  const [availableStartDates, setAvailableStartDates] = useState<Set<string>>(
+    new Set()
+  );
   const [availabilityError, setAvailabilityError] = useState<string | null>(null);
   const [loadingAvailability, setLoadingAvailability] = useState(false);
 
@@ -227,7 +220,7 @@ export default function ContactForm() {
       try {
         const params = new URLSearchParams({
           size: form.size,
-          duration: String(durationDays), //  requested duration (server bumps pickup)
+          duration: String(durationDays),
           days: "90",
         });
 
@@ -264,17 +257,14 @@ export default function ContactForm() {
   const disabled = useMemo(() => {
     const base: any[] = [{ before: todayDate }, { after: maxDate }];
 
-    // Disable weekends always (start dates cannot be weekends)
     base.push((date: Date) => isWeekend(date));
 
     if (!form.size || form.size === "Not sure" || loadingAvailability) return base;
 
     if (availableStartDates.size === 0) {
-      // Disable all selectable days in the window
       return [...base, { after: todayDate, before: maxDate }];
     }
 
-    // Disable any day in window that is NOT available
     const disabledDays: Date[] = [];
     for (let i = 0; i <= 90; i++) {
       const iso = addDaysISO(todayStr, i);
@@ -292,13 +282,17 @@ export default function ContactForm() {
       return;
     }
 
-    // Extra safety
+    // Honeypot: if filled, silently succeed (don't help bots learn)
+    if (form.companyWebsite.trim() !== "") {
+      setSubmitted(true);
+      return;
+    }
+
     if (availableStartDates.size > 0 && !availableStartDates.has(form.dateNeeded)) {
       alert("That start date is no longer available. Please choose another.");
       return;
     }
 
-    // Prevent weekend start dates even if something slips through
     if (form.dateNeeded) {
       const d = isoToDate(form.dateNeeded);
       if (isWeekend(d)) {
@@ -312,9 +306,10 @@ export default function ContactForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          companyWebsite: form.companyWebsite, // honeypot
           dumpsterSize: form.size,
           startDate: form.dateNeeded,
-          durationDays, //  requested duration (server will compute weekday pickup)
+          durationDays,
           name: form.name,
           phone: form.phone,
           email: form.email,
@@ -371,12 +366,35 @@ export default function ContactForm() {
     );
   }
 
-  const dayBase =
-    "h-11 w-11 rounded-full font-semibold !text-zinc-900 transition cursor-pointer";
+  const dayBase = "h-11 w-11 rounded-full font-semibold !text-zinc-900 transition cursor-pointer";
   const hoverBlue = "hover:border-blue-400 hover:bg-blue-100/80";
 
   return (
     <form onSubmit={handleSubmit} className="rounded-3xl border-2 border-zinc-900 bg-white p-6">
+      {/* Honeypot (bots often fill hidden fields) */}
+      <div
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          top: "auto",
+          width: 1,
+          height: 1,
+          overflow: "hidden",
+        }}
+        aria-hidden="true"
+      >
+        <label htmlFor="companyWebsite">Company Website</label>
+        <input
+          id="companyWebsite"
+          name="companyWebsite"
+          type="text"
+          autoComplete="off"
+          tabIndex={-1}
+          value={form.companyWebsite}
+          onChange={(e) => update("companyWebsite", e.target.value)}
+        />
+      </div>
+
       <h2 className="text-xl font-semibold text-zinc-900">Request a quote</h2>
       <p className="mt-2 text-sm text-zinc-600">
         Fill this out and we’ll recommend the best dumpster size for your project.
@@ -518,7 +536,6 @@ export default function ContactForm() {
                       classNames={{
                         months: "w-full text-black",
                         month: "w-full",
-
                         month_caption: "relative mb-3 h-1",
                         caption_label:
                           "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold !text-zinc-900",
@@ -527,19 +544,14 @@ export default function ContactForm() {
                           "h-11 w-11 inline-flex items-center justify-center rounded-full hover:bg-zinc-100 !text-blue-600",
                         nav_button_previous: "-ml-6",
                         nav_button_next: " -mr-6",
-
                         head_row: "flex w-full",
-                        head_cell:
-                          "flex-1 text-center text-xs font-bold uppercase !text-zinc-800",
-
+                        head_cell: "flex-1 text-center text-xs font-bold uppercase !text-zinc-800",
                         row: "flex w-full justify-between mt-2",
                         cell: "h-11 w-11 p-0 flex items-center justify-center",
-
                         day: `${dayBase} ${hoverBlue}`,
                         day_today: "border border-red-600 !text-red-600",
                         day_disabled: "!text-zinc-300 cursor-not-allowed line-through",
                         day_outside: "!text-zinc-300 opacity-40",
-
                         day_range_middle:
                           "bg-blue-100 !text-zinc-900 rounded-none first:rounded-l-full last:rounded-r-full",
                         day_range_start:
@@ -656,5 +668,3 @@ function Field({
     </label>
   );
 }
-
-
