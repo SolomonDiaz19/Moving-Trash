@@ -11,10 +11,10 @@ export default function OurStory() {
             </h2>
             <p className="mt-4 text-zinc-600">
               {site.name} 
-              Why you started the business?
-              What does “family-owned” mean for your business? (Who’s involved, and how does that affect how you treat customers?)
-              What sets BBA apart from other dumpster rental companies in DFW? (Speed, pricing, service, flexibility, communication, etc.)
-              What’s most important to you when serving customers? (Reliability, honesty, respect for property, clear communication, etc.)
+              BBA Waste Hauling Services LLC is a local dumpster rental company serving the Dallas-Fort worth area.
+              We help homeowners, small business, and contractors keep projects moving with dependable roll-off dumpster service and
+              straightforward scheduling. Whether its a remodel, cleanout, and jobsite work, we offer 20-yard, 30-yard, and 40-yard dumpsters
+              delivered delivered and picked up on time so you can stay focused on the work, not the waste.
             </p>
             <p className="mt-4 text-zinc-600">
               "Insert more comments HERE"
