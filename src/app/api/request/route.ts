@@ -4,6 +4,9 @@ import { Resend } from "resend";
 import { signBookingToken } from "@/lib/bookingToken";
 import { bookingRequestSchema } from "@/lib/validation";
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { kv } from "@vercel/kv";
+
 type Size = "20 Yard" | "30 Yard" | "40 Yard";
 
 const inventoryCaps: Record<Size, number> = {
@@ -25,9 +28,7 @@ function todayInTimeZone(tz = "America/Chicago") {
   }).format(new Date());
 }
 
-
 function normalizeSize(input: any): Size | null {
-  // Accept "20", "20 Yard", 20, etc.
   const s = String(input ?? "").trim();
   if (s === "20" || s === "20 Yard") return "20 Yard";
   if (s === "30" || s === "30 Yard") return "30 Yard";
@@ -60,23 +61,14 @@ function requireEnv(name: string) {
   return v;
 }
 
-/**
- * Convert anything like:
- * - "2026-02-01" -> "2026-02-01"
- * - ISO "2026-02-01T00:00:00.000Z" -> "2026-02-01"
- */
 function toDateOnly(value: string) {
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
 
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) throw new Error(`Invalid date: ${value}`);
-  // Use UTC date component to avoid local timezone shifting.
   return d.toISOString().slice(0, 10);
 }
 
-/**
- * Add N days to a YYYY-MM-DD date string and return YYYY-MM-DD.
- */
 function addDaysDateOnly(dateOnly: string, days: number) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateOnly)) throw new Error(`Invalid dateOnly: ${dateOnly}`);
   const d = new Date(`${dateOnly}T00:00:00.000Z`);
@@ -84,12 +76,6 @@ function addDaysDateOnly(dateOnly: string, days: number) {
   return d.toISOString().slice(0, 10);
 }
 
-/**
- * Count only relevant holds:
- * - ignore cancelled events
- * - count events with Status: REQUEST / CONFIRMED in description,
- *   or summary starting with REQUEST/CONFIRMED
- */
 function isCountedBookingEvent(ev: any) {
   if (!ev) return false;
   if (ev.status === "cancelled") return false;
@@ -106,11 +92,6 @@ function isCountedBookingEvent(ev: any) {
   );
 }
 
-/**
- * Extract a date-only [start, end) range from a Google Calendar event.
- * - For all-day events, ev.start.date and ev.end.date are YYYY-MM-DD, and end is EXCLUSIVE.
- * - For timed events, normalize to date-only via toDateOnly(dateTime) (still treated as [start, end)).
- */
 function eventToRangeDateOnly(ev: any): { start: string; end: string } | null {
   if (!ev?.start || !ev?.end) return null;
 
@@ -134,19 +115,30 @@ function eventToRangeDateOnly(ev: any): { start: string; end: string } | null {
   return { start, end }; // end is exclusive
 }
 
-/**
- * Overlap for date-only ranges using exclusive end.
- * Two ranges [aStart, aEnd) and [bStart, bEnd) overlap iff:
- *   aStart < bEnd AND bStart < aEnd
- */
 function rangesOverlap(aStart: string, aEnd: string, bStart: string, bEnd: string) {
   return aStart < bEnd && bStart < aEnd;
 }
 
 function isAllowedDuration(durationDays: number) {
-  // Policy: 7 is standard; allow 8–14 as extended
   return durationDays === 7 || (durationDays >= 8 && durationDays <= 14);
 }
+
+/** ---------------- Rate Limit ---------------- **/
+
+// 10 requests per 15 minutes per IP
+const rateLimiter = new Ratelimit({
+  redis: kv,
+  limiter: Ratelimit.slidingWindow(10, "15 m"),
+  analytics: true,
+});
+
+function getClientIp(req: Request) {
+  const xff = req.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  return req.headers.get("x-real-ip") ?? "unknown";
+}
+
+/** ---------------- Handler ---------------- **/
 
 export async function POST(req: Request) {
   try {
@@ -161,7 +153,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true }, { status: 200 });
     }
 
-    // 3) Zod validation (server-side)
+    // 3) Rate limit by IP (after honeypot, before heavy work)
+    const ip = getClientIp(req);
+    const { success, limit, remaining, reset } = await rateLimiter.limit(`request:${ip}`);
+
+    if (!success) {
+      return NextResponse.json(
+        { ok: false, error: "Too many requests. Please try again later." },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(limit),
+            "X-RateLimit-Remaining": String(remaining),
+            "X-RateLimit-Reset": String(reset),
+          },
+        }
+      );
+    }
+
+    // 4) Zod validation (server-side)
     const parsed = bookingRequestSchema.safeParse(raw);
     if (!parsed.success) {
       return NextResponse.json(
@@ -170,10 +180,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // Use validated data from here down
     const data = parsed.data;
 
-    // 4) Normalize size (your existing helper)
+    // 5) Normalize size
     const size = normalizeSize(data.dumpsterSize);
     if (!size) {
       return NextResponse.json({ ok: false, error: "Invalid dumpster size." }, { status: 400 });
@@ -188,22 +197,24 @@ export async function POST(req: Request) {
     const startDateOnly = toDateOnly(data.startDate);
     const durationDays = Number(data.durationDays);
 
-    // Enforce your policy duration constraints (7 OR 8–14)
     if (!isAllowedDuration(durationDays)) {
-      return NextResponse.json({ error: "Invalid durationDays. Allowed: 7, or 8–14." }, { status: 400 });
-    }
-
-    // Enforce booking horizon (3 months / 90 days)
-    const today = todayInTimeZone("America/Chicago");
-    const maxStart = addDaysDateOnly(today, MAX_ADVANCE_DAYS);
-    if (startDateOnly > maxStart) {
       return NextResponse.json(
-        { error: `Start date too far in advance. Max is ${MAX_ADVANCE_DAYS} days.` },
+        { ok: false, error: "Invalid durationDays. Allowed: 7, or 8–14." },
         { status: 400 }
       );
     }
 
-    // Rental window for ALL-DAY events (end is exclusive)
+    // booking horizon
+    const today = todayInTimeZone("America/Chicago");
+    const maxStart = addDaysDateOnly(today, MAX_ADVANCE_DAYS);
+    if (startDateOnly > maxStart) {
+      return NextResponse.json(
+        { ok: false, error: `Start date too far in advance. Max is ${MAX_ADVANCE_DAYS} days.` },
+        { status: 400 }
+      );
+    }
+
+    // rental window [start, end)
     const endDateOnly = addDaysDateOnly(startDateOnly, durationDays);
 
     const calId = getCalendarId(size);
@@ -214,7 +225,7 @@ export async function POST(req: Request) {
     const auth = getAuth();
     const calendar = google.calendar({ version: "v3", auth });
 
-    // Overlap query buffer
+    // overlap buffer
     const bufferedStartDateOnly = addDaysDateOnly(startDateOnly, -MAX_DURATION_DAYS);
 
     const list = await calendar.events.list({
@@ -238,7 +249,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, available: false }, { status: 200 });
     }
 
-    // Create REQUEST event (ALL-DAY)
+    // Create REQUEST event
     const summary = `REQUEST – ${size} – ${name}`;
     const created = await calendar.events.insert({
       calendarId: calId,
@@ -267,7 +278,6 @@ export async function POST(req: Request) {
 
     const secret = requireEnv("APPROVE_TOKEN_SECRET");
 
-    // Token payload expects ISO boundaries
     const startISO = `${startDateOnly}T00:00:00.000Z`;
     const endISO = `${endDateOnly}T00:00:00.000Z`;
 
@@ -288,7 +298,6 @@ export async function POST(req: Request) {
     const approveUrl = `${siteUrl}/api/approve?token=${encodeURIComponent(token)}`;
     const declineUrl = `${siteUrl}/api/approve?token=${encodeURIComponent(token)}&action=decline`;
 
-    // Email owner (+ customer ack)
     const resendKey = requireEnv("RESEND_API_KEY");
     const emailFrom = requireEnv("EMAIL_FROM");
     const ownerEmail = requireEnv("OWNER_NOTIFY_EMAIL");
@@ -319,7 +328,6 @@ export async function POST(req: Request) {
       `,
     });
 
-    // Best-effort: customer acknowledgement email
     let customerAckSent = false;
     try {
       await resend.emails.send({
@@ -350,7 +358,7 @@ export async function POST(req: Request) {
   } catch (err: any) {
     console.error(err);
     return NextResponse.json(
-      { error: "Server error", detail: err?.message || String(err) },
+      { ok: false, error: "Server error", detail: err?.message || String(err) },
       { status: 500 }
     );
   }
