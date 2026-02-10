@@ -50,7 +50,7 @@ export default function Hero() {
           </div>
 
           {/* quick trust boxes */}
-          <div className="grid grid-cols-3 gap-3 pt-4 text-xs text-slate-600">
+          <div className="grid grid-cols-1 gap-3 pt-4 text-xs text-slate-600 sm:grid-cols-3">
             <div className="rounded-xl border border-slate-200 bg-white p-3">
               <div className="font-semibold text-slate-900">Quick</div>
               <div>Delivery available</div>

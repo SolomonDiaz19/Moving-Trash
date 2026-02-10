@@ -64,7 +64,7 @@ export default function PhotoCarousel({ photos }: { photos: Photo[] }) {
           <button
             type="button"
             onClick={() => go(index - 1)}
-            className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-2 text-sm font-semibold text-zinc-900 shadow hover:bg-white"
+            className="hidden sm:block absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-2 text-sm font-semibold text-zinc-900 shadow hover:bg-white"
             aria-label="Previous photo"
           >
             ‹
@@ -72,7 +72,7 @@ export default function PhotoCarousel({ photos }: { photos: Photo[] }) {
           <button
             type="button"
             onClick={() => go(index + 1)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-2 text-sm font-semibold text-zinc-900 shadow hover:bg-white"
+            className="hidden sm:block absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-2 text-sm font-semibold text-zinc-900 shadow hover:bg-white"
             aria-label="Next photo"
           >
             ›
