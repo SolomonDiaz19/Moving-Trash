@@ -15,7 +15,7 @@ export default function DumpsterCards() {
             <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
               Choose the right dumpster size
             </h2>
-            <p className="mt-2 text-sm text-zinc-600">
+            <p className="mt-2 text-sm ">
               Not sure? We’ll recommend a size based on your project.
             </p>
           </div>

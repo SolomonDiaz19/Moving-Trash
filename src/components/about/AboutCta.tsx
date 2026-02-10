@@ -5,7 +5,7 @@ export default function AboutCta() {
   return (
     <section className="bg-zinc-900">
       <div className="mx-auto max-w-6xl px-4 py-14">
-        <div className="rounded-3xl border-2 border-zinc-700 bg-zinc-900 p-8 md:p-10">
+        <div className="rounded-3xl border-2 border-zinc-700 bg-zinc-50 p-8 md:p-10">
           <p className="text-sm font-semibold text-red-500">{site.promo}</p>
           <h3 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 md:text-3xl">
             Ready to get started?
