@@ -43,7 +43,7 @@ const faqs = [
   },
   {
     q: "Do I need a permit?",
-    a: "Private property: usually no.     Street/alley/right-of-way:may require a permit depending on city. We can help confirm.",
+    a: "Private property:  usually no.     Street/alley/right-of-way:  may require a permit depending on city. We can help confirm.",
   },
   {
     q: "What can I put in the dumpster?",

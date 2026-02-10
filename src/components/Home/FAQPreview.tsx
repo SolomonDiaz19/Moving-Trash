@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const faqs = [
-  { q: "How long can I keep the dumpster?", a: "idk." },
-  { q: "What can I put in the dumpster?", a: "idk" },
-  { q: "Do I need a permit?", a: " idk " },
+  { q: "What item are NOT allowed", a: "Common restricted items: paint/chemicals, oils/fuels, batteries, tires, abestos, medical waste, propane tanks, some electronics. Rules may vary - Ask first." },
+  { q: "How much does a dumpster rental cost?", a: "Pricing depends on the dumpster size, rental lenght, delivery location (DFW), disposal fees, and weight. The fastest way to get an exact total is to request a quote with your zip code and the size you need." },
+  { q: "Do I need a permit?", a: " Private property:  usually no.     Street/alley/right-of-way:  may require a permit depending on city. We can help confirm. " },
 ];
 
 export default function FAQPreview() {

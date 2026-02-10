@@ -159,7 +159,7 @@ export async function POST(req: Request) {
 
     if (!success) {
       return NextResponse.json(
-        { ok: false, error: "Too many requests. Please try again later." },
+        { ok: false, error: "Please wait a few minutes and try again." },
         {
           status: 429,
           headers: {

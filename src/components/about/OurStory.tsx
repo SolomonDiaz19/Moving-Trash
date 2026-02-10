@@ -9,16 +9,13 @@ export default function OurStory() {
             <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 md:text-3xl">
               Our story
             </h2>
-            <p className="mt-4 text-zinc-600">
-              {site.name} 
+            <p className="mt-4 text-zinc-600"> 
               BBA Waste Hauling Services LLC is a local dumpster rental company serving the Dallas-Fort worth area.
               We help homeowners, small business, and contractors keep projects moving with dependable roll-off dumpster service and
               straightforward scheduling. Whether its a remodel, cleanout, and jobsite work, we offer 20-yard, 30-yard, and 40-yard dumpsters
               delivered delivered and picked up on time so you can stay focused on the work, not the waste.
             </p>
-            <p className="mt-4 text-zinc-600">
-              "Insert more comments HERE"
-            </p>
+            
           </div>
 
           <div className="rounded-3xl border-2 border-zinc-900 bg-white p-6">
