@@ -94,11 +94,11 @@ export default function Header() {
         {/* Mobile menu dropdown */}
         {open && (
           <div className="md:hidden pb-3">
-            <div className="rounded-2xl border border-red-900 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-red-700 bg-red-600 p-3 shadow-lg">
               {/* Phone shown here on mobile */}
               <a
                 href={site.phoneHref}
-                className="mb-2 block rounded-xl px-3 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-50"
+                className="mb-2 block rounded-xl px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
                 onClick={() => setOpen(false)}
               >
                 Call: {site.phoneDisplay}
@@ -110,7 +110,7 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block rounded-xl px-3 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-50"
+                  className="block rounded-xl px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
