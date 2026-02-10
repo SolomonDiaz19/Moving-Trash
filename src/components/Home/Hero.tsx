@@ -69,12 +69,12 @@ export default function Hero() {
         
         <PhotoCarousel
         photos={[
-          { src: "/photos/Dumpsters-2.jpg", alt: "Truck delivering a dumpster" },
-          { src: "/photos/Dumpsterhouse.JPEG", alt: "Truck delivering a dumpster" },
-          { src: "/photos/truck-3.JPEG", alt: "Truck delivering a dumpster" },
-          { src: "/photos/Truck-1.JPEG", alt: "Truck delivering a dumpster" },
-          { src: "/photos/Dumpsters-1.JPEG", alt: "Multiple dumpsters on a job site" },
-          { src: "/photos/Truck-2.JPEG", alt: "Dumpsters and truck on a job site" },
+          { src: "/Photos/Dumpsters-2.jpg", alt: "Truck delivering a dumpster" },
+          { src: "/Photos/Dumpsterhouse.JPEG", alt: "Truck delivering a dumpster" },
+          { src: "/Photos/truck-3.JPEG", alt: "Truck delivering a dumpster" },
+          { src: "/Photos/Truck-1.JPEG", alt: "Truck delivering a dumpster" },
+          { src: "/Photos/Dumpsters-1.JPEG", alt: "Multiple dumpsters on a job site" },
+          { src: "/Photos/Truck-2.JPEG", alt: "Dumpsters and truck on a job site" },
           ]}
           />
 

@@ -36,7 +36,7 @@ export default function SizeComparison() {
     <td>
   <div className="mx-auto w-[160px] overflow-hidden rounded-3xl border border-white bg-white">
     <Image
-      src="/photos/Dumpstersize-20.png"
+      src="/Photos/Dumpstersize-20.png"
       alt="20 yard dumpster"
       width={302}
       height={40}
@@ -48,7 +48,7 @@ export default function SizeComparison() {
    <td>
   <div className="mx-auto w-[160px] overflow-hidden rounded-3xl border border-white bg-white">
     <Image
-      src="/photos/Dumpstersizes-30.png"
+      src="/Photos/Dumpstersizes-30.png"
       alt="20 yard dumpster"
       width={302}
       height={40}
@@ -60,7 +60,7 @@ export default function SizeComparison() {
     <td>
   <div className="mx-auto w-[160px] overflow-hidden rounded-2xl border border-white bg-white">
     <Image
-      src="/photos/Dumpstersize-40.png"
+      src="/Photos/Dumpstersize-40.png"
       alt="20 yard dumpster"
       width={302}
       height={40}
