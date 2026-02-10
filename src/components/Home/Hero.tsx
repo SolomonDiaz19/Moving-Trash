@@ -29,8 +29,8 @@ export default function Hero() {
           </h1>
 
           <p className="text-base text-slate-600 md:text-lg">
-            Easy ordering, flexible rental periods, and the right size for cleanups,
-            remodeling, and construction.
+            Affordable dumpster rentals across the Dallas–Fort Worth Metroplex. Fast delivery, 
+            transparent pricing, and flexible rental periods for home and construction projects.
           </p>
 
           <div className="flex flex-wrap gap-3">
@@ -52,16 +52,16 @@ export default function Hero() {
           {/* quick trust boxes */}
           <div className="grid grid-cols-1 gap-3 pt-4 text-xs text-slate-600 sm:grid-cols-3">
             <div className="rounded-xl border border-slate-200 bg-white p-3">
-              <div className="font-semibold text-slate-900">Quick</div>
-              <div>Delivery available</div>
+              <div className="font-semibold text-slate-900">Request a Quote</div>
+              <div>Simple Online Form</div>
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-3">
-              <div className="font-semibold text-slate-900">Transparent</div>
-              <div>Pricing & terms</div>
+              <div className="font-semibold text-slate-900">Check Availability</div>
+              <div>We Confirm Quickly</div>
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-3">
-              <div className="font-semibold text-slate-900">Right Size</div>
-              <div>For any job</div>
+              <div className="font-semibold text-slate-900">Submit Request</div>
+              <div>Fast Email Confirmation</div>
             </div>
           </div>
         </div>

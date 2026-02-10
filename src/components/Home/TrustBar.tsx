@@ -1,6 +1,6 @@
 const items = [
   { title: "Fast Drop-Off", desc: "On-time delivery & pickup" },
-  { title: "Easy Ordering", desc: "Call or request a quote online" },
+  { title: "Simple Ordering", desc: "Request Online or Call" },
   { title: "Local Service", desc: "Friendly, reliable support" },
   { title: "Upfront Pricing", desc: "Clear rental terms" },
 ];

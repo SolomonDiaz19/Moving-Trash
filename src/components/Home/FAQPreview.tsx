@@ -1,9 +1,24 @@
 import Link from "next/link";
 
 const faqs = [
-  { q: "What item are NOT allowed", a: "Common restricted items: paint/chemicals, oils/fuels, batteries, tires, abestos, medical waste, propane tanks, some electronics. Rules may vary - Ask first." },
+  { q: "What item are NOT allowed", a:(
+  <div>
+    <p>Common restricted items include:</p>
+    <ul className="mt-2 list-disc pl-5 space-y-1">
+      <li>Paint & chemicals</li>
+      <li>Oils & fuels</li>
+      <li>Batteries</li>
+      <li>Tires</li>
+      <li>Asbestos</li>
+      <li>Medical waste</li>
+      <li>Propane tanks</li>
+      <li>Some electronics</li>
+    </ul>
+    <p className="mt-2">Rules may vary — ask first.</p>
+  </div>
+) },
   { q: "How much does a dumpster rental cost?", a: "Pricing depends on the dumpster size, rental lenght, delivery location (DFW), disposal fees, and weight. The fastest way to get an exact total is to request a quote with your zip code and the size you need." },
-  { q: "Do I need a permit?", a: " Private property:  usually no.     Street/alley/right-of-way:  may require a permit depending on city. We can help confirm. " },
+  { q: "How does booking work?", a: " Customers submit a rental request online. We review availability and confirm delivery dates before finalizing the reservation. You will receive an email once your request is approved. " },
 ];
 
 export default function FAQPreview() {
