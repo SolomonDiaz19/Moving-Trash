@@ -18,8 +18,8 @@ export default function SizeComparison() {
           These are general guidelines - your best size depends on debris type and volume.
         </p>
 
-        <div className="mt-8 overflow-hidden rounded-3xl border-2 px-4 border-zinc-900 pt-2 pb-10">
-          <table className="w-full text-left text-sm text-zinc-900">    
+        <div className="mt-8 overflow-x-auto rounded-3xl border-2 border-zinc-900">
+          <table className="min-w-[900px] w-full text-left text-sm text-zinc-900">    
             <thead className="bg-zinc-50">
               <tr className="[&>th]:px-8 [&>th]:py-5 [&>th]:font-semibold [&>th]:text-zinc-900 [&>th]:text-center text-lg">
                 <th className="w-[28%]"> </th>

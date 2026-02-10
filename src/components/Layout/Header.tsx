@@ -71,32 +71,23 @@ export default function Header() {
             </Link>
 
             {/* Mobile hamburger */}
-            <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-xl border border-zinc-200 p-2 text-zinc-900 md:hidden"
-              aria-label="Open menu"
-              aria-expanded={open}
-              onClick={() => setOpen((v) => !v)}
+            <button 
+            type="button"
+            className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            onClick={() => setOpen(v => !v)}
             >
-              {/* Simple hamburger / X */}
-              <span className="relative block h-5 w-5">
-                <span
-                  className={`absolute left-0 top-1 block h-0.5 w-5 bg-current transition ${
-                    open ? "translate-y-2 rotate-45" : ""
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-2.5 block h-0.5 w-5 bg-current transition ${
-                    open ? "opacity-0" : ""
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-4 block h-0.5 w-5 bg-current transition ${
-                    open ? "-translate-y-2 -rotate-45" : ""
-                  }`}
-                />
-              </span>
-            </button>
+              {open ? (
+                <svg viewBox="0 0 24 24" className="h-5 w-5">
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                  ) : (
+                  <svg viewBox="0 0 24 24" className="h-5 w-5">
+                    <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  )}
+                  </button>
           </div>
         </div>
 
