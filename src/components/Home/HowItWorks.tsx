@@ -1,7 +1,7 @@
 const steps = [
-  { title: "Tell us your project", desc: "Tell us your project details and preferred rental dates so we can check availability." },
-  { title: "We deliver the dumpster", desc: "Our team reviews your request and confirms delivery dates based on dumpster availability." },
-  { title: "We pick it up", desc: "Once approved, we deliver the dumpster and schedule pickup when your project is complete." },
+  { title: "Submit Your Request", desc: "Tell us your project details and preferred rental dates so we can check availability." },
+  { title: "We Confirm Availability", desc: "Our team reviews your request and confirms delivery dates based on dumpster availability." },
+  { title: "Delivery & Pickup", desc: "Once approved, we deliver the dumpster and schedule pickup when your project is complete." },
 ];
 
 export default function HowItWorks() {

@@ -7,14 +7,12 @@ const faqs = [
     <ul className="mt-2 list-disc pl-5 space-y-1">
       <li>Paint & chemicals</li>
       <li>Oils & fuels</li>
-      <li>Batteries</li>
+      <li>Batteries & Some electronics</li>
       <li>Tires</li>
-      <li>Asbestos</li>
+      <li>Asbestos & Propane tanks</li>
       <li>Medical waste</li>
-      <li>Propane tanks</li>
-      <li>Some electronics</li>
     </ul>
-    <p className="mt-2">Rules may vary — ask first.</p>
+    <p className="mt-2">Rules may vary - ask first.</p>
   </div>
 ) },
   { q: "How much does a dumpster rental cost?", a: "Pricing depends on the dumpster size, rental lenght, delivery location (DFW), disposal fees, and weight. The fastest way to get an exact total is to request a quote with your zip code and the size you need." },
