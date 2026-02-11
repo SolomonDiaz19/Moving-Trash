@@ -333,7 +333,7 @@ export async function POST(req: Request) {
       await resend.emails.send({
         from: emailFrom,
         to: email,
-        subject: "We received your dumpster request ✅",
+        subject: "We received your dumpster request",
         html: `
           <p>Hi ${name},</p>
           <p>We received your dumpster request and will review it shortly.</p>

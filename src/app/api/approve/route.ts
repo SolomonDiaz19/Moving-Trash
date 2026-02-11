@@ -153,7 +153,7 @@ export async function GET(req: Request) {
 
     const size = parseSizeFromSummary(currentSummary);
 
-    // ✅ Idempotent approve: if it already looks confirmed, do NOT patch or re-email
+    // Idempotent approve: if it already looks confirmed, do NOT patch or re-email
     const alreadyConfirmed =
       currentSummary.toUpperCase().startsWith("CONFIRMED") ||
       /Status:\s*CONFIRMED/i.test(currentDesc);
@@ -174,7 +174,7 @@ export async function GET(req: Request) {
       const result2 = await resend.emails.send({
         from: process.env.EMAIL_FROM!,
         to: payload.customerEmail,
-        subject: "Your dumpster request is approved ✅",
+        subject: "Your dumpster request is approved",
         html: `
           <p>Hi ${payload.customerName},</p>
           <p>Your dumpster request has been <b>approved</b> for:</p>

@@ -41,7 +41,5 @@ service-account.json
 *.tsbuildinfo
 next-env.d.ts
 
-#Photos update
-!public/photos/
-!public/photos/**
+
 

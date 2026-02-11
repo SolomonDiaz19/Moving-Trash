@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-
 const rows = [
   { label: "Capacity", v20: "Medium", v30: "Large", v40: "Maximum" },
   { label: "Best for", v20: "Cleanouts / small remodels", v30: "Bigger remodels / debris", v40: "Commercial / demo" },
@@ -19,68 +18,94 @@ export default function SizeComparison() {
         </p>
 
         <div className="mt-8 overflow-x-auto rounded-3xl border-2 border-zinc-900">
-          <table className="min-w-[900px] w-full text-left text-sm text-zinc-900">    
+          <table className="min-w-[900px] w-full text-left text-sm text-zinc-900">
             <thead className="bg-zinc-50">
               <tr className="[&>th]:px-8 [&>th]:py-5 [&>th]:font-semibold [&>th]:text-zinc-900 [&>th]:text-center text-lg">
                 <th className="w-[28%]"> </th>
-                <th>20 Yard 22'L x 8'W x 4'5"H </th>
-                <th>30 Yard 22'L x 8'W x 6'H </th>
-                <th>40 Yard 22'L x 8'W x 8'H </th>
+                <th>20 Yard 22'L x 8'W x 4'5"H</th>
+                <th>30 Yard 22'L x 8'W x 6'H</th>
+                <th>40 Yard 22'L x 8'W x 8'H</th>
               </tr>
             </thead>
+
             <tbody className="[&>tr:not(:last-child)]:border-b [&>tr:not(:last-child)]:border-zinc-200">
-  {/* Photo row */}
-  <tr className="[&>td]:px-4 [&>td]:py-4">
-    <td className="align-middle text-center text-medium font-semibold text-zinc-900">Example</td>
 
-    <td>
-  <div className="mx-auto w-[160px] overflow-hidden rounded-3xl border border-white bg-white">
-    <Image
-      src="/Photos/Dumpstersize-20.png"
-      alt="20 yard dumpster"
-      width={302}
-      height={40}
-      className="object-cover"
-    />
-  </div>
-</td>
+              {/* Photo row */}
+              <tr className="[&>td]:px-4 [&>td]:py-4">
+                <td className="align-middle text-center text-medium font-semibold text-zinc-900">
+                  Example
+                </td>
 
-   <td>
-  <div className="mx-auto w-[160px] overflow-hidden rounded-3xl border border-white bg-white">
-    <Image
-      src="/Photos/Dumpstersizes-30.png"
-      alt="20 yard dumpster"
-      width={302}
-      height={40}
-      className="object-cover"
-    />
-  </div>
-</td>
+                {/* 20 Yard */}
+                <td className="text-center">
+                  <div className="mx-auto w-[160px] overflow-hidden rounded-3xl border border-white bg-white">
+                    <Image
+                      src="/Photos/Dumpstersize-20.png"
+                      alt="20 yard dumpster"
+                      width={302}
+                      height={40}
+                      className="object-cover"
+                    />
+                  </div>
+                  <a
+                    href="mailto:info@bbawaste.com?subject=Question%20About%2020%20Yard%20Dumpster"
+                    className="mt-3 inline-block rounded-xl border-2 border-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-900 hover:text-white transition"
+                  >
+                    Ask a Question
+                  </a>
+                </td>
 
-    <td>
-  <div className="mx-auto w-[160px] overflow-hidden rounded-2xl border border-white bg-white">
-    <Image
-      src="/Photos/Dumpstersize-40.png"
-      alt="20 yard dumpster"
-      width={302}
-      height={40}
-      className="object-cover"
-    />
-  </div>
-</td>
-  </tr>
+                {/* 30 Yard */}
+                <td className="text-center">
+                  <div className="mx-auto w-[160px] overflow-hidden rounded-3xl border border-white bg-white">
+                    <Image
+                      src="/Photos/Dumpstersizes-30.png"
+                      alt="30 yard dumpster"
+                      width={302}
+                      height={40}
+                      className="object-cover"
+                    />
+                  </div>
+                  <a
+                    href="mailto:info@bbawaste.com?subject=Question%20About%2030%20Yard%20Dumpster"
+                    className="mt-3 inline-block rounded-xl border-2 border-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-900 hover:text-white transition"
+                  >
+                    Ask a Question
+                  </a>
+                </td>
 
-  {/* Data rows */}
-  {rows.map((r) => (
-    <tr key={r.label} className="[&>td]:px-4 [&>td]:py-4">
-      <td className="align-middle text-center text-medium font-bold text-zinc-900 ">{r.label}</td>
-      <td className=" font-semibold text-center text-zinc-900">{r.v20}</td>
-      <td className=" font-semibold text-center text-zinc-900">{r.v30}</td>
-      <td className=" font-semibold text-center text-zinc-900">{r.v40}</td>
-    </tr>
-  ))}
-</tbody>
+                {/* 40 Yard */}
+                <td className="text-center">
+                  <div className="mx-auto w-[160px] overflow-hidden rounded-2xl border border-white bg-white">
+                    <Image
+                      src="/Photos/Dumpstersize-40.png"
+                      alt="40 yard dumpster"
+                      width={302}
+                      height={40}
+                      className="object-cover"
+                    />
+                  </div>
+                  <a
+                    href="mailto:info@bbawaste.com?subject=Question%20About%2040%20Yard%20Dumpster"
+                    className="mt-3 inline-block rounded-xl border-2 border-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-900 hover:text-white transition"
+                  >
+                    Ask a Question
+                  </a>
+                </td>
+              </tr>
 
+              {/* Data rows */}
+              {rows.map((r) => (
+                <tr key={r.label} className="[&>td]:px-4 [&>td]:py-4">
+                  <td className="align-middle text-center text-medium font-bold text-zinc-900">
+                    {r.label}
+                  </td>
+                  <td className="font-semibold text-center text-zinc-900">{r.v20}</td>
+                  <td className="font-semibold text-center text-zinc-900">{r.v30}</td>
+                  <td className="font-semibold text-center text-zinc-900">{r.v40}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
 
