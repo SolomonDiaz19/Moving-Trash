@@ -9,7 +9,7 @@ const reasons = [
   },
   {
     title: "Reliable pickup",
-    desc: "Schedule pickup when you’re done—we’ll be there.",
+    desc: "Schedule pickup when you’re done - we’ll be there.",
   },
   {
     title: "Local DFW service",
