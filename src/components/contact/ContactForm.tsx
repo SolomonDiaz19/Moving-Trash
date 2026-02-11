@@ -19,7 +19,7 @@ type FormState = {
   name: string;
   phone: string;
   email: string;
-  city: string;
+  address: string;
   projectType: (typeof projectTypes)[number] | "";
   size: (typeof sizes)[number] | "";
   dateNeeded: string; // YYYY-MM-DD
@@ -94,7 +94,7 @@ export default function ContactForm() {
     name: "",
     phone: "",
     email: "",
-    city: "",
+    address: "",
     projectType: "",
     size: "",
     dateNeeded: "",
@@ -163,7 +163,7 @@ export default function ContactForm() {
     const e: Partial<Record<keyof FormState, string>> = {};
     if (!form.name.trim()) e.name = "Please enter your name.";
     if (!form.phone.trim()) e.phone = "Please enter your phone number.";
-    if (!form.city.trim()) e.city = "Please enter your city (DFW area).";
+    if (!form.address.trim()) e.address = "Please enter the delivery address (street address).";
     if (!form.projectType) e.projectType = "Please select a project type.";
     if (!form.size) e.size = "Please select a dumpster size.";
 
@@ -313,8 +313,8 @@ export default function ContactForm() {
           name: form.name,
           phone: form.phone,
           email: form.email,
-          address: form.city,
-          notes: `Project: ${form.projectType}\n${form.details}`,
+          address: form.address,
+          notes: `Project: ${form.projectType}${form.details?.trim() ? `\n${form.details.trim()}` : ""}`,
         }),
       });
 
@@ -397,7 +397,7 @@ export default function ContactForm() {
 
       <h2 className="text-xl font-semibold text-zinc-900">Request a quote</h2>
       <p className="mt-2 text-sm text-zinc-600">
-        Fill this out and we’ll recommend the best dumpster size for your project.
+          Fill this out and we’ll confirm availability and send pricing for your delivery address.
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -428,14 +428,17 @@ export default function ContactForm() {
           />
         </Field>
 
-        <Field label="City" error={errors.city}>
-          <input
-            className="w-full rounded-xl border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-red-600 text-zinc-900"
-            value={form.city}
-            onChange={(e) => update("city", e.target.value)}
-            placeholder="Dallas, Fort Worth, Arlington..."
-          />
-        </Field>
+        <Field label="Service Address" error={errors.address}>
+  <input
+    className="w-full rounded-xl border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-red-600 text-zinc-900"
+    value={form.address}
+    onChange={(e) => update("address", e.target.value)}
+    placeholder="123 Main St, Dallas, TX 75201"
+  />
+  <p className="mt-1 text-xs text-zinc-500">
+    Street address (delivery location) — not just city.
+  </p>
+</Field>
 
         <Field label="Project type" error={errors.projectType}>
           <select

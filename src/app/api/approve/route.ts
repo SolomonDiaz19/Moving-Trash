@@ -71,6 +71,46 @@ function redirectTo(
   return NextResponse.redirect(url);
 }
 
+/**
+ * Minimal HTML template for consistent, professional emails.
+ * (Keeps it simple but clean.)
+ */
+function emailLayout(opts: { title: string; intro: string; detailsHtml: string; footer?: string }) {
+  const footer =
+    opts.footer ??
+    `If you have urgent questions, call or text us at (469) 716-3877.`;
+
+  return `
+  <div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.5; color: #111827;">
+    <div style="max-width: 640px; margin: 0 auto; padding: 24px;">
+      <div style="border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden;">
+        <div style="padding: 18px 20px; background: #ffffff; border-bottom: 1px solid #e5e7eb;">
+          <div style="font-size: 16px; font-weight: 700; color: #111827;">BBA Waste Hauling Services</div>
+        </div>
+
+        <div style="padding: 20px;">
+          <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">${opts.title}</div>
+          <div style="margin: 0 0 14px 0; color: #374151;">${opts.intro}</div>
+
+          <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px 16px; background: #ffffff;">
+            ${opts.detailsHtml}
+          </div>
+
+          <div style="margin-top: 16px; color: #374151;">${footer}</div>
+          <div style="margin-top: 18px; color: #6b7280; font-size: 12px;">
+            Please reply to this email if you need to make changes.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px; color: #6b7280; font-size: 12px;">
+        BBA Waste Hauling Services • Dallas–Fort Worth Metroplex
+      </div>
+    </div>
+  </div>
+  `;
+}
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -81,7 +121,7 @@ export async function GET(req: Request) {
     const secret = process.env.APPROVE_TOKEN_SECRET;
     if (!secret) throw new Error("Missing APPROVE_TOKEN_SECRET");
 
-    const payload = verifyBookingToken(token, secret);
+    const payload: any = verifyBookingToken(token, secret);
     if (!payload) {
       return redirectTo(req, "invalid");
     }
@@ -91,10 +131,30 @@ export async function GET(req: Request) {
 
     const resend = new Resend(resendKey);
 
+    const from = process.env.EMAIL_FROM;
+    if (!from) throw new Error("Missing EMAIL_FROM");
+
     const auth = getAuth();
     const calendar = google.calendar({ version: "v3", auth });
 
     const rangeText = formatRange(payload.startISO, payload.endISO);
+
+    // Optional address if your booking token includes it
+    // (If your token uses a different key, adjust here.)
+    const address =
+      payload.address ||
+      payload.serviceAddress ||
+      payload.location ||
+      "";
+
+    const detailsHtml = (sizeText: string) => `
+      <div style="margin: 0; padding: 0; color: #111827;">
+        <div><b>Customer:</b> ${payload.customerName}</div>
+        ${sizeText ? `<div style="margin-top: 6px;"><b>Dumpster:</b> ${sizeText}</div>` : ""}
+        <div style="margin-top: 6px;"><b>Dates:</b> ${rangeText}</div>
+        ${address ? `<div style="margin-top: 6px;"><b>Service Address:</b> ${address}</div>` : ""}
+      </div>
+    `;
 
     // --- DECLINE ---
     if (action === "decline") {
@@ -107,30 +167,34 @@ export async function GET(req: Request) {
         });
         size = parseSizeFromSummary(ev.data.summary || "");
       } catch {
-        // if it was already deleted, we still proceed with a safe redirect
+        // ignore
       }
 
-      // Idempotent decline: if already deleted, delete call can throw; we treat as "declined"
+      // Idempotent decline: if already deleted, delete call can throw; treat as declined
       try {
         await calendar.events.delete({
           calendarId: payload.calId,
           eventId: payload.eventId,
         });
       } catch {
-        // ignore — already declined/deleted
+        // ignore
       }
 
-      // Send decline email (idempotent-ish: will resend if link is clicked again)
+      // Professional decline email
+      const declineHtml = emailLayout({
+        title: "Request Update",
+        intro:
+          `Thanks for your request. Unfortunately, we’re unable to accommodate the dates you selected at this time.`,
+        detailsHtml: detailsHtml(size),
+        footer:
+          `Reply with alternate dates and we’ll do our best to help you schedule.`,
+      });
+
       const result = await resend.emails.send({
-        from: process.env.EMAIL_FROM!,
+        from,
         to: payload.customerEmail,
-        subject: "Dumpster request update",
-        html: `
-          <p>Hi ${payload.customerName},</p>
-          <p>Your dumpster request could not be confirmed for:</p>
-          <p><b>${rangeText}</b></p>
-          <p>Please reply with alternate dates and we’ll help you schedule.</p>
-        `,
+        subject: "BBA Waste Hauling — Request Update",
+        html: declineHtml,
       });
 
       console.log("RESEND DECLINE EMAIL RESULT:", result);
@@ -171,16 +235,19 @@ export async function GET(req: Request) {
         },
       });
 
+      const approveHtml = emailLayout({
+        title: "Booking Confirmed",
+        intro: `Great news — your dumpster rental request has been approved and scheduled.`,
+        detailsHtml: detailsHtml(size),
+        footer:
+          `Please ensure clear access at the service address for delivery and pickup. If you need to make changes, reply to this email or call/text (469) 716-3877.`,
+      });
+
       const result2 = await resend.emails.send({
-        from: process.env.EMAIL_FROM!,
+        from,
         to: payload.customerEmail,
-        subject: "Your dumpster request is approved",
-        html: `
-          <p>Hi ${payload.customerName},</p>
-          <p>Your dumpster request has been <b>approved</b> for:</p>
-          <p><b>${rangeText}</b></p>
-          <p>If anything changes, reply to this email or call us.</p>
-        `,
+        subject: "BBA Waste Hauling — Booking Confirmed",
+        html: approveHtml,
       });
 
       console.log("RESEND APPROVE EMAIL RESULT:", result2);

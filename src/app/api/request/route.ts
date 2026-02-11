@@ -76,6 +76,23 @@ function addDaysDateOnly(dateOnly: string, days: number) {
   return d.toISOString().slice(0, 10);
 }
 
+/**
+ * Format date range for humans.
+ * Your calendar endDateOnly is exclusive for all-day events,
+ * so we display inclusive end = endDateOnly - 1 day.
+ */
+function formatRangeDateOnly(startDateOnly: string, endDateOnlyExclusive: string) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(startDateOnly) && /^\d{4}-\d{2}-\d{2}$/.test(endDateOnlyExclusive)) {
+    const endD = new Date(`${endDateOnlyExclusive}T00:00:00.000Z`);
+    if (!Number.isNaN(endD.getTime())) {
+      endD.setUTCDate(endD.getUTCDate() - 1);
+      const inclusiveEnd = endD.toISOString().slice(0, 10);
+      return `${startDateOnly} to ${inclusiveEnd}`;
+    }
+  }
+  return `${startDateOnly} to ${endDateOnlyExclusive}`;
+}
+
 function isCountedBookingEvent(ev: any) {
   if (!ev) return false;
   if (ev.status === "cancelled") return false;
@@ -136,6 +153,46 @@ function getClientIp(req: Request) {
   const xff = req.headers.get("x-forwarded-for");
   if (xff) return xff.split(",")[0].trim();
   return req.headers.get("x-real-ip") ?? "unknown";
+}
+
+/**
+ * Simple, consistent email wrapper.
+ * (Keeps emails professional without needing React email templates.)
+ */
+function emailLayout(opts: { title: string; intro: string; detailsHtml: string; footer?: string }) {
+  const footer =
+    opts.footer ??
+    `If you have urgent questions, call or text us at (469) 716-3877.`;
+
+  return `
+  <div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.5; color: #111827;">
+    <div style="max-width: 640px; margin: 0 auto; padding: 24px;">
+      <div style="border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden;">
+        <div style="padding: 18px 20px; background: #ffffff; border-bottom: 1px solid #e5e7eb;">
+          <div style="font-size: 16px; font-weight: 700; color: #111827;">BBA Waste Hauling Services</div>
+        </div>
+
+        <div style="padding: 20px;">
+          <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">${opts.title}</div>
+          <div style="margin: 0 0 14px 0; color: #374151;">${opts.intro}</div>
+
+          <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px 16px; background: #ffffff;">
+            ${opts.detailsHtml}
+          </div>
+
+          <div style="margin-top: 16px; color: #374151;">${footer}</div>
+          <div style="margin-top: 18px; color: #6b7280; font-size: 12px;">
+            Please reply to this email if you need to make changes.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px; color: #6b7280; font-size: 12px;">
+        BBA Waste Hauling Services • Dallas–Fort Worth Metroplex
+      </div>
+    </div>
+  </div>
+  `;
 }
 
 /** ---------------- Handler ---------------- **/
@@ -281,6 +338,7 @@ export async function POST(req: Request) {
     const startISO = `${startDateOnly}T00:00:00.000Z`;
     const endISO = `${endDateOnly}T00:00:00.000Z`;
 
+    // ✅ Include useful fields in the token so the approve route can show them (optional-safe)
     const token = signBookingToken(
       {
         calId,
@@ -289,8 +347,13 @@ export async function POST(req: Request) {
         customerName: name,
         startISO,
         endISO,
+        // extras (for email display / approve page details)
+        size,
+        phone,
+        address,
+        notes,
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
-      },
+      } as any,
       secret
     );
 
@@ -303,49 +366,85 @@ export async function POST(req: Request) {
     const ownerEmail = requireEnv("OWNER_NOTIFY_EMAIL");
     const resend = new Resend(resendKey);
 
+    const dateRangeText = formatRangeDateOnly(startDateOnly, endDateOnly);
+
+    // ---------------- Owner Email (Professional) ----------------
+    const ownerDetailsHtml = `
+      <div style="margin: 0; padding: 0; color: #111827;">
+        <div><b>Customer:</b> ${name}</div>
+        <div style="margin-top: 6px;"><b>Phone:</b> ${phone}</div>
+        <div style="margin-top: 6px;"><b>Email:</b> ${email}</div>
+        <div style="margin-top: 6px;"><b>Dumpster Size:</b> ${size}</div>
+        <div style="margin-top: 6px;"><b>Requested Dates:</b> ${dateRangeText}</div>
+        <div style="margin-top: 6px;"><b>Duration:</b> ${durationDays} day(s)${
+          durationDays > 7 ? ` • <b>Overage:</b> $10 flat (over 7 days)` : ""
+        }</div>
+        ${
+          address
+            ? `<div style="margin-top: 6px;"><b>Service Address:</b> ${address}</div>`
+            : `<div style="margin-top: 6px;"><b>Service Address:</b> (not provided)</div>`
+        }
+        ${notes ? `<div style="margin-top: 6px;"><b>Notes:</b> ${notes}</div>` : ""}
+        <div style="margin-top: 14px;">
+          <a href="${approveUrl}" style="display:inline-block; padding:10px 14px; background:#dc2626; color:#ffffff; text-decoration:none; border-radius:10px; font-weight:700;">
+            ✅ Approve
+          </a>
+          <span style="display:inline-block; width:10px;"></span>
+          <a href="${declineUrl}" style="display:inline-block; padding:10px 14px; border:1px solid #111827; color:#111827; text-decoration:none; border-radius:10px; font-weight:700;">
+            ❌ Decline
+          </a>
+        </div>
+      </div>
+    `;
+
+    const ownerHtml = emailLayout({
+      title: "New Dumpster Rental Request",
+      intro: "A new request was submitted on the website. Review details below and approve or decline.",
+      detailsHtml: ownerDetailsHtml,
+      footer: "Tip: If the service address is missing or incomplete, reply to request clarification before approving.",
+    });
+
     await resend.emails.send({
       from: emailFrom,
       to: ownerEmail,
-      subject: `New REQUEST: ${size} (${name})`,
-      html: `
-        <p><b>New booking request</b></p>
-        <p><b>Size:</b> ${size}</p>
-        <p><b>Name:</b> ${name}<br/>
-           <b>Phone:</b> ${phone}<br/>
-           <b>Email:</b> ${email}</p>
-        ${address ? `<p><b>Address:</b> ${address}</p>` : ""}
-        ${notes ? `<p><b>Notes:</b> ${notes}</p>` : ""}
-        <p><b>Start:</b> ${startDateOnly}<br/>
-           <b>End:</b> ${endDateOnly}<br/>
-           <b>Duration:</b> ${durationDays} day(s)
-           ${durationDays > 7 ? `<br/><b>Overage:</b> $10 flat (over 7 days)` : ""}
-        </p>
-        <p>
-          <a href="${approveUrl}">✅ Approve</a>
-          &nbsp; | &nbsp;
-          <a href="${declineUrl}">❌ Decline</a>
-        </p>
-      `,
+      subject: `New Dumpster Request — ${size} — ${name}`,
+      html: ownerHtml,
     });
 
+    // ---------------- Customer ACK Email (Professional + Address Clarification) ----------------
     let customerAckSent = false;
     try {
+      const customerDetailsHtml = `
+        <div style="margin: 0; padding: 0; color: #111827;">
+          <div><b>Dumpster Size:</b> ${size}</div>
+          <div style="margin-top: 6px;"><b>Requested Dates:</b> ${dateRangeText}</div>
+          <div style="margin-top: 6px;"><b>Duration:</b> ${durationDays} day(s)${
+            durationDays > 7 ? ` • <b>Overage:</b> $10 flat (over 7 days)` : ""
+          }</div>
+          ${
+            address
+              ? `<div style="margin-top: 6px;"><b>Service Address:</b> ${address}</div>`
+              : `<div style="margin-top: 6px;"><b>Service Address:</b> (not provided)</div>`
+          }
+        </div>
+      `;
+
+      const customerHtml = emailLayout({
+        title: "Request Received",
+        intro:
+          "Thank you for contacting BBA Waste Hauling Services. We’ve received your request and will review availability shortly.",
+        detailsHtml: customerDetailsHtml,
+        footer:
+          "Please note: the service address should be the exact delivery location (street address), not just the city. We’ll email you once your request is approved or if we need additional information.",
+      });
+
       await resend.emails.send({
         from: emailFrom,
         to: email,
-        subject: "We received your dumpster request",
-        html: `
-          <p>Hi ${name},</p>
-          <p>We received your dumpster request and will review it shortly.</p>
-          <p><b>Dumpster:</b> ${size}<br/>
-             <b>Dates:</b> ${startDateOnly} to ${endDateOnly}<br/>
-             <b>Duration:</b> ${durationDays} day(s)
-             ${durationDays > 7 ? `<br/><b>Overage:</b> $10 flat fee (over 7 days)` : ""}
-          </p>
-          ${address ? `<p><b>Address:</b> ${address}</p>` : ""}
-          <p>If we need any clarification, we’ll reach out using the phone/email you provided.</p>
-        `,
+        subject: "BBA Waste Hauling — Request Received",
+        html: customerHtml,
       });
+
       customerAckSent = true;
     } catch (e) {
       console.error("Customer ACK email failed", e);

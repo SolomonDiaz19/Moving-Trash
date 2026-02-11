@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const bookingRequestSchema = z.object({
-  // ✅ matches what your ContactForm sends
+  // matches what your ContactForm sends
   dumpsterSize: z.enum(["20 Yard", "30 Yard", "40 Yard"]),
 
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "startDate must be YYYY-MM-DD"),
@@ -17,7 +17,7 @@ export const bookingRequestSchema = z.object({
 
   notes: z.string().trim().max(800).optional().or(z.literal("")),
 
-  // ✅ honeypot
+  //  honeypot
   companyWebsite: z.string().optional().or(z.literal("")),
 });
 

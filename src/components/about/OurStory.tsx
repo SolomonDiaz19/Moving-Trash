@@ -13,7 +13,7 @@ export default function OurStory() {
               BBA Waste Hauling Services LLC is a local dumpster rental company serving the Dallas-Fort worth area.
               We help homeowners, small business, and contractors keep projects moving with dependable roll-off dumpster service and
               straightforward scheduling. Whether its a remodel, cleanout, and jobsite work, we offer 20-yard, 30-yard, and 40-yard dumpsters
-              delivered delivered and picked up on time so you can stay focused on the work, not the waste.
+              delivered and picked up on time so you can stay focused on the work, not the waste.
             </p>
             
           </div>
