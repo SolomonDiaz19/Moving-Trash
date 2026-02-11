@@ -11,9 +11,9 @@ export default function AboutHero() {
         </h1>
 
         <p className="mt-4 max-w-2xl text-base text-zinc-600">
-          BBA Waste Hauling Services is a local, family-owned dumpster rental company serving the Dallas-Fort Worth Metroplex. 
-          We offer fast, same-day delivery with clear pricing and dependable pickup. From home cleanouts and remodels to roofing 
-          and construction projects, our team helps you choose the right dumpster to keep your job moving.
+          Need a dumpster? We’ve got you covered.
+          Whether you’re cleaning out a garage, remodeling a room, or tackling a big project, 
+          we make renting a dumpster simple with fast delivery, clear pricing, and dependable pickup
         </p>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
