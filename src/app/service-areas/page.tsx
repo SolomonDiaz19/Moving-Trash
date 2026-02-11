@@ -16,9 +16,9 @@ export default function AboutPage() {
     <main className="bg-white">
       <AboutHero />
       <OurStory />
+      <Values />
       <WhyChooseUs />
       <AboutCta />
-      <Values />
     </main>
   );
 }
