@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const faqs = [
-  { q: "What item are NOT allowed", a:(
+  { q: "What items are NOT allowed", a:(
   <div>
-    <p>Common restricted items include:</p>
+    <p className="mt-2">Rules may vary - ask first.</p>
     <ul className="mt-2 list-disc pl-5 space-y-1">
       <li>Paint & chemicals</li>
       <li>Oils & fuels</li>
@@ -12,10 +12,9 @@ const faqs = [
       <li>Asbestos & Propane tanks</li>
       <li>Medical waste</li>
     </ul>
-    <p className="mt-2">Rules may vary - ask first.</p>
   </div>
 ) },
-  { q: "How much does a dumpster rental cost?", a: "Pricing depends on the dumpster size, rental lenght, delivery location (DFW), disposal fees, and weight. The fastest way to get an exact total is to request a quote with your zip code and the size you need." },
+  { q: "How much does a dumpster rental cost?", a: "Pricing depends on the dumpster size, rental length, delivery location (DFW), disposal fees, and weight. The fastest way to get an exact total is to request a quote with your zip code and the size you need." },
   { q: "How does booking work?", a: " Customers submit a rental request online. We review availability and confirm delivery dates before finalizing the reservation. You will receive an email once your request is approved. " },
 ];
 
