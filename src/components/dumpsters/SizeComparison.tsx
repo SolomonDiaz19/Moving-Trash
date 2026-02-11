@@ -17,10 +17,13 @@ export default function SizeComparison() {
           These are general guidelines - your best size depends on debris type and volume.
         </p>
 
-        <div className="mt-8 overflow-x-auto rounded-3xl border-2 border-zinc-900">
+        {/* Softer container */}
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-zinc-200 shadow-sm">
           <table className="min-w-[900px] w-full text-left text-sm text-zinc-900">
+            
+            {/* Header */}
             <thead className="bg-zinc-50">
-              <tr className="[&>th]:px-8 [&>th]:py-5 [&>th]:font-semibold [&>th]:text-zinc-900 [&>th]:text-center text-lg">
+              <tr className="[&>th]:px-8 [&>th]:py-4 [&>th]:font-semibold [&>th]:text-zinc-900 [&>th]:text-center text-xl md:text-2xl">
                 <th className="w-[28%]"> </th>
                 <th>20 Yard 22'L x 8'W x 4'5"H</th>
                 <th>30 Yard 22'L x 8'W x 6'H</th>
@@ -28,17 +31,18 @@ export default function SizeComparison() {
               </tr>
             </thead>
 
-            <tbody className="[&>tr:not(:last-child)]:border-b [&>tr:not(:last-child)]:border-zinc-200">
+            {/* Body with zebra striping */}
+            <tbody className="[&>tr:not(:last-child)]:border-b [&>tr:not(:last-child)]:border-zinc-200 [&>tr:nth-child(even)]:bg-zinc-50">
 
               {/* Photo row */}
               <tr className="[&>td]:px-4 [&>td]:py-4">
-                <td className="align-middle text-center text-medium font-semibold text-zinc-900">
+                <td className="align-middle text-center font-semibold text-zinc-900">
                   Example
                 </td>
 
                 {/* 20 Yard */}
                 <td className="text-center">
-                  <div className="mx-auto w-[160px] overflow-hidden rounded-3xl border border-white bg-white">
+                  <div className="mx-auto w-[190px] md:w-[220px] overflow-hidden rounded-2xl bg-white">
                     <Image
                       src="/Photos/Dumpstersize-20.png"
                       alt="20 yard dumpster"
@@ -51,7 +55,7 @@ export default function SizeComparison() {
 
                 {/* 30 Yard */}
                 <td className="text-center">
-                  <div className="mx-auto w-[160px] overflow-hidden rounded-3xl border border-white bg-white">
+                  <div className="mx-auto w-[190px] md:w-[220px] overflow-hidden rounded-2xl bg-white">
                     <Image
                       src="/Photos/Dumpstersizes-30.png"
                       alt="30 yard dumpster"
@@ -64,7 +68,7 @@ export default function SizeComparison() {
 
                 {/* 40 Yard */}
                 <td className="text-center">
-                  <div className="mx-auto w-[160px] overflow-hidden rounded-2xl border border-white bg-white">
+                  <div className="mx-auto w-[190px] md:w-[220px] overflow-hidden rounded-2xl bg-white">
                     <Image
                       src="/Photos/Dumpstersize-40.png"
                       alt="40 yard dumpster"
@@ -78,8 +82,8 @@ export default function SizeComparison() {
 
               {/* Data rows */}
               {rows.map((r) => (
-                <tr key={r.label} className="[&>td]:px-4 [&>td]:py-4">
-                  <td className="align-middle text-center text-medium font-bold text-zinc-900">
+                <tr key={r.label} className="[&>td]:px-4 [&>td]:py-3">
+                  <td className="align-middle text-center font-bold text-zinc-900">
                     {r.label}
                   </td>
                   <td className="font-semibold text-center text-zinc-900">{r.v20}</td>
