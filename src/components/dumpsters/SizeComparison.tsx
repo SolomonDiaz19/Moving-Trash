@@ -35,7 +35,7 @@ export default function SizeComparison() {
             <tbody className="[&>tr:not(:last-child)]:border-b [&>tr:not(:last-child)]:border-zinc-200 [&>tr:nth-child(even)]:bg-zinc-50">
 
               {/* Photo row */}
-              <tr className="[&>td]:px-4 [&>td]:py-4">
+              <tr className="[&>td]:px-4 [&>td]:py-2">
                 <td className="align-middle text-center font-semibold text-zinc-900">
                   Example
                 </td>
