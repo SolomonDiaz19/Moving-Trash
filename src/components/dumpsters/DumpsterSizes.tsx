@@ -34,41 +34,53 @@ export default function DumpsterSizes() {
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {dumpsters.map((d) => (
-            <div
-              key={d.size}
-              className="rounded-3xl border-2 border-zinc-900 bg-white p-6 shadow-sm text-zinc-900"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="text-lg font-semibold text-zinc-900">{d.size}</div>
-                <div className="inline-flex rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-600">
-                  {d.highlight}
+          {dumpsters.map((d) => {
+            // Build a mailto subject like: "Question About 30 Yard Dumpster"
+            const subject = encodeURIComponent(`Question About ${d.size} Dumpster`);
+            const body = encodeURIComponent(
+              `Hi,\n\nI have a question about the ${d.size} dumpster.\n\nProject Type:\nPreferred Dates:\nLocation:\n`
+            );
+
+            return (
+              <div
+                key={d.size}
+                className="rounded-3xl border-2 border-zinc-900 bg-white p-6 shadow-sm text-zinc-900"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="text-lg font-semibold text-zinc-900">{d.size}</div>
+                  <div className="inline-flex rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-600">
+                    {d.highlight}
+                  </div>
+                </div>
+
+                <p className="mt-3 text-sm text-zinc-600">{d.use}</p>
+
+                <ul className="mt-4 space-y-2 text-sm text-zinc-700">
+                  {d.bullets.map((b) => (
+                    <li key={b}>• {b}</li>
+                  ))}
+                </ul>
+
+                <div className="mt-6 flex gap-3">
+                  {/* Get Quote → Contact Form */}
+                  <Link
+                    href="/contact"
+                    className="inline-flex rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition"
+                  >
+                    Get Quote
+                  </Link>
+
+                  {/* Ask a Question → Prefilled Email */}
+                  <a
+                    href={`mailto:info@bbawaste.com?subject=${subject}&body=${body}`}
+                    className="inline-flex rounded-xl border-2 border-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-900 hover:text-red-600 hover:border-red-600 transition"
+                  >
+                    Ask a Question
+                  </a>
                 </div>
               </div>
-
-              <p className="mt-3 text-sm text-zinc-600">{d.use}</p>
-
-              <ul className="mt-4 space-y-2 text-sm text-zinc-700">
-                {d.bullets.map((b) => (
-                  <li key={b}>• {b}</li>
-                ))}
-              </ul>
-
-              <div className="mt-6 flex gap-3">
-            <Link href="/contact"
-                  className="inline-flex rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition"
-                >
-                  Get Quote
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex rounded-xl border-2 border-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-900 hover:text-red-600 hover:border-red-600 transition"
-                >
-                  Ask a Question
-                </Link>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

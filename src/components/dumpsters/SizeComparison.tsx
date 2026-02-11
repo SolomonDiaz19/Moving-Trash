@@ -47,12 +47,6 @@ export default function SizeComparison() {
                       className="object-cover"
                     />
                   </div>
-                  <a
-                    href="mailto:info@bbawaste.com?subject=Question%20About%2020%20Yard%20Dumpster"
-                    className="mt-3 inline-block rounded-xl border-2 border-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-900 hover:text-white transition"
-                  >
-                    Ask a Question
-                  </a>
                 </td>
 
                 {/* 30 Yard */}
@@ -66,12 +60,6 @@ export default function SizeComparison() {
                       className="object-cover"
                     />
                   </div>
-                  <a
-                    href="mailto:info@bbawaste.com?subject=Question%20About%2030%20Yard%20Dumpster"
-                    className="mt-3 inline-block rounded-xl border-2 border-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-900 hover:text-white transition"
-                  >
-                    Ask a Question
-                  </a>
                 </td>
 
                 {/* 40 Yard */}
@@ -85,12 +73,6 @@ export default function SizeComparison() {
                       className="object-cover"
                     />
                   </div>
-                  <a
-                    href="mailto:info@bbawaste.com?subject=Question%20About%2040%20Yard%20Dumpster"
-                    className="mt-3 inline-block rounded-xl border-2 border-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-900 hover:text-white transition"
-                  >
-                    Ask a Question
-                  </a>
                 </td>
               </tr>
 
